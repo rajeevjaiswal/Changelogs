@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+    <string name="app_name">Changelogs</string>
+
+    <string name="action_about">About</string>
+
+    <string name="title_activity">Activity</string>
+    <string name="nav_header_title">All apps</string>
+
+    <string name="source_not_play_store">The update was not installed from the Play Store</string>
+    <string name="action_open_play_store">Open Play Store</string>
+    <string name="error_fetching_description">Error fetching description</string>
+    <string name="cant_open_app">Can\'t open this app</string>
+    <string name="action_open_app">Open app</string>
+    <string name="title_details">Update history</string>
+
+</resources>
