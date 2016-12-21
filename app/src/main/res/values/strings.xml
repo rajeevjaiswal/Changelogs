@@ -10,9 +10,10 @@
 
     <string name="source_not_play_store">The update was not installed from the Play Store</string>
     <string name="action_open_play_store">Open Play Store</string>
-    <string name="error_fetching_description">Error fetching description</string>
+    <string name="error_fetching_description">No description available</string>
     <string name="cant_open_app">Can\'t open this app</string>
     <string name="action_open_app">Open app</string>
     <string name="title_details">Update history</string>
+    <string name="empty_state_message">Changelogs will show when you receive updates</string>
 
 </resources>

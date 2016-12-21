@@ -8,4 +8,6 @@
     <color name="divider">#B6B6B6</color>
     <color name="windowBackground">#F5F5F5</color>
 
+    <color name="emptyStateBackground">#E0E0E0</color>
+
 </resources>

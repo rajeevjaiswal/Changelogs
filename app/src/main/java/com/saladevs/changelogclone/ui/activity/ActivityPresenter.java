@@ -11,9 +11,6 @@ import rx.Subscription;
 
 class ActivityPresenter extends BasePresenter<ActivityFragment> {
 
-    private static final String PREFS_FILE = "activity";
-    private static final boolean enabledDescriptins = true;
-
     private Realm mRealm;
     private Subscription mSubscription;
 
@@ -28,8 +25,13 @@ class ActivityPresenter extends BasePresenter<ActivityFragment> {
         mSubscription = mRealm.where(PackageUpdate.class)
                 .findAllSortedAsync("date", Sort.DESCENDING)
                 .asObservable()
-                .subscribe(u -> {
-                    getMvpView().showPublications(u);
+                .subscribe(updates -> {
+                    if (updates.size() > 0) {
+                        getMvpView().showEmptyState(false);
+                        getMvpView().showUpdates(updates);
+                    } else {
+                        getMvpView().showEmptyState(true);
+                    }
                 });
     }
 

@@ -1,9 +1,7 @@
 package com.saladevs.changelogclone.ui.details;
 
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,11 +17,11 @@ import java.util.List;
 public class DetailsFragment extends Fragment implements DetailsMvpView {
 
     private DetailsPresenter mPresenter;
-    private PackageInfo mPackageInfo;
+
+    private View mEmptyStateView;
 
     private RecyclerView mRecyclerView;
     private DetailsAdapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     public DetailsFragment() {
     }
@@ -33,7 +31,7 @@ public class DetailsFragment extends Fragment implements DetailsMvpView {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            mPackageInfo = getArguments().getParcelable(DetailsActivity.PARAM_PACKAGE);
+            PackageInfo mPackageInfo = getArguments().getParcelable(DetailsActivity.PARAM_PACKAGE);
             mPresenter = new DetailsPresenter(mPackageInfo.packageName);
         } else {
             throw new IllegalArgumentException("Must provide PackageInfo to DetailsFragment");
@@ -44,9 +42,10 @@ public class DetailsFragment extends Fragment implements DetailsMvpView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_details, container, false);
+        mEmptyStateView = view.findViewById(R.id.emptyStateView);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
 
-        mLayoutManager = new LinearLayoutManager(getActivity());
+        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mRecyclerView.setLayoutManager(mLayoutManager);
 
         mAdapter = new DetailsAdapter();
@@ -67,6 +66,11 @@ public class DetailsFragment extends Fragment implements DetailsMvpView {
         super.onDestroyView();
 
         mPresenter.detachView();
+    }
+
+    @Override
+    public void showEmptyState(boolean b) {
+        mEmptyStateView.setVisibility(b ? View.VISIBLE : View.GONE);
     }
 
     @Override

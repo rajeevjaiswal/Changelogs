@@ -7,6 +7,8 @@ import java.util.List;
 
 public interface DetailsMvpView extends MvpView {
 
+    void showEmptyState(boolean b);
+
     void showUpdates(List<PackageUpdate> updates);
 
 }

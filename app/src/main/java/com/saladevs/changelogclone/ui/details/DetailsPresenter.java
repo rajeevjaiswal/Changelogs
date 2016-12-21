@@ -4,18 +4,16 @@ import com.saladevs.changelogclone.model.PackageUpdate;
 import com.saladevs.changelogclone.ui.BasePresenter;
 
 import io.realm.Realm;
-import io.realm.RealmResults;
 import io.realm.Sort;
-import rx.Observable;
 import rx.Subscription;
 
-public class DetailsPresenter extends BasePresenter<DetailsMvpView> {
+class DetailsPresenter extends BasePresenter<DetailsMvpView> {
 
     private Realm mRealm;
     private Subscription mSubscription;
     private String mPackageName;
 
-    public DetailsPresenter(String packageName) {
+    DetailsPresenter(String packageName) {
         mRealm = Realm.getDefaultInstance();
         mPackageName = packageName;
     }
@@ -28,7 +26,14 @@ public class DetailsPresenter extends BasePresenter<DetailsMvpView> {
                 .equalTo("packageName", mPackageName)
                 .findAllSorted("date", Sort.DESCENDING)
                 .asObservable()
-                .subscribe(updates -> getMvpView().showUpdates(updates));
+                .subscribe(updates -> {
+                    if (updates.size() > 0) {
+                        getMvpView().showEmptyState(false);
+                        getMvpView().showUpdates(updates);
+                    } else {
+                        getMvpView().showEmptyState(true);
+                    }
+                });
     }
 
     @Override

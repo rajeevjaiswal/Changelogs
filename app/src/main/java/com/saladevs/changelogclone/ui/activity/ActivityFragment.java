@@ -2,20 +2,13 @@ package com.saladevs.changelogclone.ui.activity;
 
 
 import android.content.pm.PackageInfo;
-import android.graphics.drawable.Animatable;
-import android.graphics.drawable.AnimatedVectorDrawable;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -31,9 +24,10 @@ public class ActivityFragment extends Fragment implements ActivityMvpView, Activ
 
     private ActivityPresenter mPresenter;
 
-    private ActivityAdapter mAdapter;
+    private View mEmptyStateView;
 
-    private Menu mMenu;
+    private RecyclerView mRecyclerView;
+    private ActivityAdapter mAdapter;
 
     public ActivityFragment() {
     }
@@ -49,7 +43,8 @@ public class ActivityFragment extends Fragment implements ActivityMvpView, Activ
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_activity, container, false);
-        RecyclerView mRecyclerView = (RecyclerView) view.findViewById(recyclerView);
+        mEmptyStateView = view.findViewById(R.id.emptyStateView);
+        mRecyclerView = (RecyclerView) view.findViewById(recyclerView);
 
         RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -63,6 +58,7 @@ public class ActivityFragment extends Fragment implements ActivityMvpView, Activ
                 DividerItemDecoration.VERTICAL);
         decoration.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.divider));
         mRecyclerView.addItemDecoration(decoration);
+
 
         return view;
     }
@@ -87,9 +83,13 @@ public class ActivityFragment extends Fragment implements ActivityMvpView, Activ
         mPresenter.onItemClicked(packageInfo);
     }
 
+    @Override
+    public void showEmptyState(boolean b) {
+        mEmptyStateView.setVisibility(b ? View.VISIBLE : View.GONE);
+    }
 
     @Override
-    public void showPublications(List<PackageUpdate> updates) {
+    public void showUpdates(List<PackageUpdate> updates) {
         mAdapter.setData(updates);
     }
 
