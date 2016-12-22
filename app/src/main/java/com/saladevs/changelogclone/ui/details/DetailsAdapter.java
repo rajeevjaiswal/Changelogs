@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.saladevs.changelogclone.App;
 import com.saladevs.changelogclone.R;
 import com.saladevs.changelogclone.model.PackageUpdate;
-import com.saladevs.changelogclone.utils.StringUtils;
 
 import java.util.List;
 
@@ -74,7 +73,7 @@ public class DetailsAdapter extends RecyclerView.Adapter<DetailsAdapter.ViewHold
         }
         holder.title.setText(DateUtils.formatDateTime(App.getContext(), update.getDate().getTime(), 0));
         if (update.getDescription() != null) {
-            holder.support.setText(StringUtils.getCleanDescription(update.getDescription()));
+            holder.support.setText(update.getDescription());
         }
 
     }

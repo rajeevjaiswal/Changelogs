@@ -6,13 +6,16 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 
 import com.saladevs.changelogclone.model.PackageUpdate;
+import com.saladevs.changelogclone.network.ApiManager;
 import com.saladevs.changelogclone.utils.PackageUtils;
 
-import java.io.IOException;
-import java.text.ParseException;
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Date;
 
 import io.realm.Realm;
+import rx.Observable;
+import timber.log.Timber;
 
 public class PackageService extends IntentService {
     private static final String TAG = ".PackageService";
@@ -68,24 +71,20 @@ public class PackageService extends IntentService {
 
     private void handleActionFetchUpdate(String packageName) {
         PackageInfo packageInfo = PackageUtils.getPackageInfo(packageName);
-        PackageUpdate packageUpdate = new PackageUpdate(
-                packageInfo.packageName,
-                packageInfo.versionName,
-                new Date(),
-                getPackageDescription(packageInfo));
-        saveUpdate(packageUpdate);
-    }
 
-    private String getPackageDescription(PackageInfo pInfo) {
-        if (PackageUtils.isPackageFromGooglePlay(pInfo.packageName)) {
-            try {
-                return new PlayStoreParser().fetchPackageUpdate(pInfo.packageName);
-            } catch (IOException | ParseException e) {
-                return getString(R.string.error_fetching_description);
-            }
-        } else {
-            return getString(R.string.source_not_play_store);
-        }
+        Observable<String> changelogObservable =
+                ApiManager.getPlayStoreService().getChangelog(packageInfo.packageName)
+                        .map(pc -> StringUtils.join(pc.getChanges(), "\n"))
+                        .onErrorReturn(throwable -> {
+                            Timber.e(throwable);
+                            return getString(R.string.error_fetching_description);
+                        });
+
+        Observable.zip(
+                Observable.just(packageInfo),
+                changelogObservable,
+                (pi, c) -> new PackageUpdate(pi.packageName, pi.versionName, new Date(), c))
+                .subscribe(this::saveUpdate);
     }
 
     private void saveUpdate(PackageUpdate update) {

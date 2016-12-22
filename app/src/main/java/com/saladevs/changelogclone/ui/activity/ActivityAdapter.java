@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.saladevs.changelogclone.R;
 import com.saladevs.changelogclone.model.PackageUpdate;
 import com.saladevs.changelogclone.utils.PackageUtils;
-import com.saladevs.changelogclone.utils.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -162,7 +161,7 @@ class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> impl
             primaryText.setText(appName);
             secondaryText.setText(update.getVersion());
             icon.setImageDrawable(appIcon);
-            description.setText(StringUtils.getCleanDescription(update.getDescription()));
+            description.setText(update.getDescription());
         }
     }
 
