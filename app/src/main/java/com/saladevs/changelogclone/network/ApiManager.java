@@ -5,11 +5,16 @@ import com.saladevs.changelogclone.BuildConfig;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiManager {
+
+    private static final HttpLoggingInterceptor LOGGING_INTERCEPTOR = new HttpLoggingInterceptor()
+            .setLevel(BuildConfig.DEBUG ?
+                    HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
 
     private static final OkHttpClient CLIENT = new OkHttpClient.Builder()
             .addInterceptor(chain -> {
@@ -20,7 +25,9 @@ public class ApiManager {
 
                 Request request = requestBuilder.build();
                 return chain.proceed(request);
-            }).build();
+            })
+            .addInterceptor(LOGGING_INTERCEPTOR)
+            .build();
 
     private static final Retrofit RETROFIT =
             new Retrofit.Builder()

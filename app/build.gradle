@@ -34,6 +34,7 @@ android {
 
 dependencies {
     final SUPPORT_LIBRARY_VERSION = '25.1.0'
+    final OKHTTP_VERSION = '3.5.0'
     final RETROFIT_VERSION = '2.1.0'
 
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -42,7 +43,8 @@ dependencies {
     compile "com.android.support:cardview-v7:$SUPPORT_LIBRARY_VERSION"
     compile "com.android.support:recyclerview-v7:$SUPPORT_LIBRARY_VERSION"
 
-    compile 'com.squareup.okhttp3:okhttp:3.5.0'
+    compile "com.squareup.okhttp3:okhttp:$OKHTTP_VERSION"
+    compile "com.squareup.okhttp3:logging-interceptor:$OKHTTP_VERSION"
     compile "com.squareup.retrofit2:retrofit:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:converter-gson:$RETROFIT_VERSION"
     compile "com.squareup.retrofit2:adapter-rxjava:$RETROFIT_VERSION"
