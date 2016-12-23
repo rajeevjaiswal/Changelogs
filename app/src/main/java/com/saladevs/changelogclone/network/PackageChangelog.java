@@ -1,9 +1,13 @@
 package com.saladevs.changelogclone.network;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.List;
 
 public class PackageChangelog {
+    @SerializedName("packageName")
     private String packageName;
+    @SerializedName("changes")
     private List<String> changes;
 
     public String getPackageName() {

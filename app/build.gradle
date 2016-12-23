@@ -20,7 +20,7 @@ android {
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             buildConfigField 'String', 'API_KEY', ReleaseApiKey
             buildConfigField 'String', 'API_BASE_URL', ProductionApiUrl
@@ -56,4 +56,5 @@ dependencies {
 
     compile 'io.reactivex:rxandroid:1.2.1'
     compile 'io.reactivex:rxjava:1.2.4'
+    compile 'com.artemzin.rxjava:proguard-rules:1.2.4.0'
 }
