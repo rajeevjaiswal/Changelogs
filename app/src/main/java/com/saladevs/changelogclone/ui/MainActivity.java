@@ -26,29 +26,37 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Set up toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setUpToolbar(mToolbar);
 
-        // Set u navigationView
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
         mNavigationView = (NavigationView) findViewById(R.id.navigation);
+        setUpNavigationView(mNavigationView);
+
+    }
+
+    private void setUpToolbar(Toolbar toolbar) {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+    
+    private void setUpNavigationView(NavigationView navigationView) {
         mNavigationView.setItemIconTintList(null);
         Menu mNavigationMenu = mNavigationView.getMenu();
-        for (PackageInfo pi : PackageUtils.getPackageList()) {
-            mNavigationMenu.add(PackageUtils.getAppLabel(pi))
-                    .setIcon(PackageUtils.getAppIconDrawable(pi))
-                    .setOnMenuItemClickListener(menuItem -> {
-                        Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                        intent.putExtra(DetailsActivity.PARAM_PACKAGE, pi);
-                        startActivity(intent);
-                        return true;
-                    });
-        }
+        PackageUtils.getPackageList()
+                .subscribe(pi -> addNavigationItem(mNavigationMenu, pi));
+    }
 
-
+    private void addNavigationItem(Menu menu, PackageInfo pi) {
+        menu.add(PackageUtils.getAppLabel(pi))
+                .setIcon(PackageUtils.getAppIconDrawable(pi)) // TODO -  onCreate Bottleneck
+                .setOnMenuItemClickListener(menuItem -> {
+                    Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
+                    intent.putExtra(DetailsActivity.PARAM_PACKAGE, pi);
+                    startActivity(intent);
+                    return true;
+                });
     }
 
     @Override
