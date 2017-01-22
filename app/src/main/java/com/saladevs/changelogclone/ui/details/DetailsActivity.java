@@ -3,14 +3,10 @@ package com.saladevs.changelogclone.ui.details;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
-import android.net.Uri;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +15,7 @@ import com.saladevs.changelogclone.utils.PackageUtils;
 
 public class DetailsActivity extends AppCompatActivity {
 
-    public static final String PARAM_PACKAGE = "package_info";
-    public static final String PLAY_STORE_URL = "https://play.google.com/store/apps/details?id=";
+    private static final String PARAM_PACKAGE = "package_info";
 
     private PackageInfo mPackageInfo;
 
@@ -49,8 +44,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         // Put fragment with the same bundle that the Activity received
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        DetailsFragment fragment = new DetailsFragment();
-        fragment.setArguments(bundle);
+        DetailsFragment fragment = DetailsFragment.newInstance(mPackageInfo);
         transaction.replace(R.id.container, fragment).commit();
 
         // Get View references
@@ -64,43 +58,5 @@ public class DetailsActivity extends AppCompatActivity {
             label.setText(PackageUtils.getAppLabel(mPackageInfo));
             subtitle.setText(mPackageInfo.packageName);
         }
-
     }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_details, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_open_app:
-                startPackageActivity(mPackageInfo.packageName);
-                return true;
-            case R.id.action_open_store:
-                startPlayStoreActivity(mPackageInfo.packageName);
-                return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void startPlayStoreActivity(String packageName) {
-        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(PLAY_STORE_URL + packageName)));
-    }
-
-    private void startPackageActivity(String packageName) {
-        Intent i = getPackageManager().getLaunchIntentForPackage(packageName);
-        if (i == null) {
-            Snackbar.make(mToolbar, R.string.cant_open_app, Snackbar.LENGTH_SHORT).show();
-        } else {
-            i.addCategory(Intent.CATEGORY_LAUNCHER);
-            startActivity(i);
-        }
-    }
-
-
 }

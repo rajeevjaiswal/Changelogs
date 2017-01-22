@@ -1,6 +1,5 @@
 package com.saladevs.changelogclone.ui;
 
-import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -40,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_menu_white_24dp);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
-    
+
     private void setUpNavigationView(NavigationView navigationView) {
         mNavigationView.setItemIconTintList(null);
         Menu mNavigationMenu = mNavigationView.getMenu();
@@ -52,9 +51,7 @@ public class MainActivity extends AppCompatActivity {
         menu.add(PackageUtils.getAppLabel(pi))
                 .setIcon(PackageUtils.getAppIconDrawable(pi)) // TODO -  onCreate Bottleneck
                 .setOnMenuItemClickListener(menuItem -> {
-                    Intent intent = new Intent(MainActivity.this, DetailsActivity.class);
-                    intent.putExtra(DetailsActivity.PARAM_PACKAGE, pi);
-                    startActivity(intent);
+                    DetailsActivity.startWith(MainActivity.this, pi);
                     return true;
                 });
     }
