@@ -24,7 +24,7 @@ class DetailsPresenter extends BasePresenter<DetailsMvpView> {
 
         mSubscription = mRealm.where(PackageUpdate.class)
                 .equalTo("packageName", mPackageName)
-                .findAllSorted("date", Sort.DESCENDING)
+                .findAllSortedAsync("date", Sort.DESCENDING)
                 .asObservable()
                 .subscribe(updates -> {
                     if (updates.size() > 0) {
