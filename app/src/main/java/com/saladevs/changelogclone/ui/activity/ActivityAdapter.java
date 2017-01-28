@@ -3,6 +3,7 @@ package com.saladevs.changelogclone.ui.activity;
 import android.content.pm.PackageInfo;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,20 +20,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import rx.Observable;
+
 class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements View.OnClickListener {
 
     private static final int TYPE_UPDATE = 1;
     private static final int TYPE_HEADER = 2;
+
+    static final int CHANGELOG_STYLE_NONE = 0;
+    static final int CHANGELOG_STYLE_SHORT = 1;
+    static final int CHANGELOG_STYLE_FULL = 2;
 
     private OnItemClickListener onItemClickListener;
 
     private List<PackageUpdate> mDataset;
     private Map<Integer, String> mHeaders;
 
+    private int mChangelogStyle;
+
     public void setData(List<PackageUpdate> updates) {
         mDataset = updates;
         mHeaders = extractHeaders(mDataset);
         notifyDataSetChanged();
+    }
+
+    void setChangelogStyle(int style) {
+        mChangelogStyle = style;
+        // Notify item changed for every PackageUpdate row
+        Observable.range(0, getItemCount())
+                .filter(i -> !mHeaders.containsKey(i))
+                .subscribe(this::notifyItemChanged);
     }
 
     private Map<Integer, String> extractHeaders(List<PackageUpdate> updates) {
@@ -76,7 +93,7 @@ class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> impl
                 ((HeaderViewHolder) holder).bindTo(mHeaders.get(position));
                 break;
             case TYPE_UPDATE:
-                ((UpdateViewHolder) holder).bindTo(mDataset.get(getDatasetPosition(position)), this);
+                ((UpdateViewHolder) holder).bindTo(mDataset.get(getDatasetPosition(position)), this, mChangelogStyle);
                 break;
         }
     }
@@ -147,7 +164,7 @@ class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> impl
 
         }
 
-        void bindTo(PackageUpdate update, View.OnClickListener listener) {
+        void bindTo(PackageUpdate update, View.OnClickListener listener, int changelogStyle) {
             PackageInfo packageInfo = PackageUtils.getPackageInfo(update.getPackageName());
 
             CharSequence appName = PackageUtils.getAppLabel(packageInfo);
@@ -162,6 +179,21 @@ class ActivityAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> impl
             secondaryText.setText(update.getVersion());
             icon.setImageDrawable(appIcon);
             description.setText(update.getDescription());
+
+            switch (changelogStyle) {
+                case CHANGELOG_STYLE_NONE:
+                    description.setVisibility(View.GONE);
+                    break;
+                case CHANGELOG_STYLE_SHORT:
+                    description.setMaxLines(3);
+                    description.setEllipsize(TextUtils.TruncateAt.END);
+                    description.setVisibility(View.VISIBLE);
+                    break;
+                case CHANGELOG_STYLE_FULL:
+                    description.setMaxLines(Integer.MAX_VALUE);
+                    description.setVisibility(View.VISIBLE);
+                    break;
+            }
         }
     }
 

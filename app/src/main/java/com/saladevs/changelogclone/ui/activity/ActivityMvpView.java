@@ -13,5 +13,7 @@ public interface ActivityMvpView extends MvpView {
 
     void showUpdates(List<PackageUpdate> updates);
 
+    void changeChangelogStyle(int style);
+
     void startDetailsActivity(PackageInfo packageInfo);
 }
