@@ -6,6 +6,6 @@ import rx.Observable;
 
 public interface PlayStoreService {
 
-    @GET("packages/{packageName}/scrape")
+    @GET("changelogs/{packageName}/latest")
     Observable<PackageChangelog> getChangelog(@Path("packageName") String packageName);
 }
