@@ -1,6 +1,8 @@
 package com.saladevs.changelogclone.ui;
 
+import android.content.Intent;
 import android.content.pm.PackageInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.saladevs.changelogclone.BuildConfig;
 import com.saladevs.changelogclone.R;
 import com.saladevs.changelogclone.ui.details.DetailsActivity;
 import com.saladevs.changelogclone.utils.PackageUtils;
@@ -41,8 +44,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setUpNavigationView(NavigationView navigationView) {
-        mNavigationView.setItemIconTintList(null);
-        Menu mNavigationMenu = mNavigationView.getMenu();
+        navigationView.setItemIconTintList(null);
+        Menu mNavigationMenu = navigationView.getMenu();
         PackageUtils.getPackageList()
                 .subscribe(pi -> addNavigationItem(mNavigationMenu, pi));
     }
@@ -69,7 +72,10 @@ public class MainActivity extends AppCompatActivity {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(mNavigationView);
                 return true;
-            case R.id.action_about:
+            case R.id.action_feedback:
+                Intent emailIntent = new Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + "saladevs@gmail.com"));
+                emailIntent.putExtra(Intent.EXTRA_SUBJECT, String.format("[Changes v%s] Feedback", BuildConfig.VERSION_NAME));
+                startActivity(Intent.createChooser(emailIntent, "Send Feedback"));
                 return true;
         }
 
